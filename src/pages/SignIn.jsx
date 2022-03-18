@@ -2,11 +2,9 @@ import React,{useState,useContext}from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import visibleIcon from '../assets/svg/visibilityIcon.svg'
 import hideIcon from '../assets/svg/passwordhide.svg'
-
 import {ReactComponent as ArrowRight}  from '../assets/svg/keyboardArrowRightIcon.svg'
-// import { AuthContext } from '../context/AuthContext'
 import useSignIn from '../customHooks/useSignIn'
-
+import OAuth from '../components/OAuth'
 function SignIn() {
   
   const [visible , setVisible] = useState(false)
@@ -63,9 +61,11 @@ function SignIn() {
           </button>
         </div>
       </form>
+      
       <Link className='registerLink' to='/signup'>
          Signup Instead
       </Link>
+      <OAuth />
     </header>
   </div>
   )

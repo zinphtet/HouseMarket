@@ -2,11 +2,9 @@ import React,{useState}from 'react'
 import { Link } from 'react-router-dom'
 import visibleIcon from '../assets/svg/visibilityIcon.svg'
 import hideIcon from '../assets/svg/passwordhide.svg'
-
 import {ReactComponent as ArrowRight}  from '../assets/svg/keyboardArrowRightIcon.svg'
-
 import useSignUp from '../customHooks/useSignUp'
-
+import OAuth from '../components/OAuth'
 function SignUp() {
   
   const [visible , setVisible] = useState(false)
@@ -67,8 +65,7 @@ const {signUpUser} = useSignUp()
       <Link className='registerLink' to='/signin'>
          SignIn Instead
       </Link>
-      
-       {/* <h2>Hello</h2> */}
+      <OAuth/>
     </header>
   </div>
   )

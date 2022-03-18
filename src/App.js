@@ -9,43 +9,42 @@ import SignUp from './pages/SignUp';
 import Navbar from './components/Navbar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {  AuthContext } from './context/AuthContext';
+import { AuthContext } from './context/AuthContext';
 import { useContext } from 'react';
 
 function App() {
-
-	
-	const { currentUser, authReady } = useContext(AuthContext);
-	console.log(currentUser);
-	
-	console.log('apprender');
+	const { currentUser, authState } = useContext(AuthContext);
 	return (
 		<>
-			<ToastContainer />
-			<Routes>
-				<Route path="/" element={<Explore />} />
-				<Route path="/offer" element={<Offer />} />
-				<Route
-					path="/profile"
-					element={
-						currentUser ? <Profile /> : <Navigate replace to="/signin" />
-					}
-				/>
-				<Route
-					path="/signin"
-					element={
-						!currentUser ? <SignIn /> : <Navigate replace to="/profile" />
-					}
-				/>
-				<Route
-					path="/signup"
-					element={
-						!currentUser ? <SignUp /> : <Navigate replace to="/profile" />
-					}
-				/>
-				<Route path="/forgotpassword" element={<ForgotPassword />} />
-			</Routes>
-			<Navbar />
+			{authState && (
+				<>
+					<ToastContainer />
+					<Routes>
+						<Route path="/" element={<Explore />} />
+						<Route path="/offer" element={<Offer />} />
+						<Route
+							path="/profile"
+							element={
+								currentUser ? <Profile /> : <Navigate replace to="/signin" />
+							}
+						/>
+						<Route
+							path="/signin"
+							element={
+								!currentUser ? <SignIn /> : <Navigate replace to="/profile" />
+							}
+						/>
+						<Route
+							path="/signup"
+							element={
+								!currentUser ? <SignUp /> : <Navigate replace to="/profile" />
+							}
+						/>
+						<Route path="/forgotpassword" element={<ForgotPassword />} />
+					</Routes>
+					<Navbar />
+				</>
+			)}
 		</>
 	);
 }

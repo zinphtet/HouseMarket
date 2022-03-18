@@ -7,7 +7,7 @@ const authReducer = (state, action) => {
 			return {
 				...state,
 				currentUser: action.payload,
-				authReady: true,
+				authState: true,
 			};
 		default:
 			return {

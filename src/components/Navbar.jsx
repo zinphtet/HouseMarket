@@ -10,8 +10,6 @@ function Navbar() {
   const mathUrl = (path)=>{
     return location.pathname === path
   }
-
-  console.log(location)
   return (
     <footer className="navbar">
        <nav className="navbarNav">

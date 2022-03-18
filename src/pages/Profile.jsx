@@ -1,15 +1,31 @@
 import React from 'react'
-import {useContext,useState} from 'react'
+import {useContext,useState,useEffect,useMemo} from 'react'
+
 import {AuthContext}  from '../context/AuthContext'
 import useLogout from '../customHooks/useLogout'
+import useUpdateUser from '../customHooks/useUpdateUser'
+import { db } from '../firebase/firebase'
+import { doc, getDoc } from "firebase/firestore";
 
 function Profile() {
-  const {currentUser } = useContext(AuthContext)
-  console.log(currentUser)
+  const {currentUser ,dispatch} = useContext(AuthContext)
   const {displayName , email} = currentUser
   const [change , setChange] = useState(false)
   const [name , setName] = useState(displayName)
+  const [unmount , setUnmount] = useState(false)
   const {logout} = useLogout()
+  const {updateUser} = useUpdateUser()
+  
+  useEffect(async () => {
+    const docRef = doc(db, "users",currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    if(!unmount){
+      setName(docSnap.data().displayName)
+    }
+    return ()=>{
+      setUnmount(true)
+    }
+  }, [currentUser.uid])
  
   const handleChange = (e)=>{
     e.preventDefault();
@@ -28,6 +44,10 @@ function Profile() {
              setChange((prev)=>{
                return !prev
              })
+             updateUser('users',currentUser.uid,name)
+             dispatch({type:'SET_USER' , payload:{
+               ...currentUser , displayName:name
+             }})
            }}>
              {change ?'done': 'change' }
              </p>
@@ -38,7 +58,6 @@ function Profile() {
                onChange={handleChange}
               />
               <input type="text" className="profileEmail" value={email} disabled/>
-              
            </form>
          </div>
        </main>
@@ -46,4 +65,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default React.memo(Profile)
