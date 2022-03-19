@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from './context/AuthContext';
 import { useContext } from 'react';
+import Category from './pages/Category';
 
 function App() {
 	const { currentUser, authState } = useContext(AuthContext);
@@ -21,7 +22,8 @@ function App() {
 					<ToastContainer />
 					<Routes>
 						<Route path="/" element={<Explore />} />
-						<Route path="/offer" element={<Offer />} />
+						<Route path="/category/:routeName" element={<Category />} />
+						<Route path="/offer" element={<Category />} />
 						<Route
 							path="/profile"
 							element={
