@@ -1,11 +1,13 @@
 import React from 'react'
 import {useContext,useState,useEffect,useMemo} from 'react'
-
 import {AuthContext}  from '../context/AuthContext'
 import useLogout from '../customHooks/useLogout'
 import useUpdateUser from '../customHooks/useUpdateUser'
 import { db } from '../firebase/firebase'
 import { doc, getDoc } from "firebase/firestore";
+import { Link } from 'react-router-dom'
+import HomeIcon from '../assets/svg/homeIcon.svg'
+import ArrowRight from '../assets/svg/keyboardArrowRightIcon.svg'
 
 function Profile() {
   const {currentUser ,dispatch} = useContext(AuthContext)
@@ -60,6 +62,11 @@ function Profile() {
               <input type="text" className="profileEmail" value={email} disabled/>
            </form>
          </div>
+         <Link to='/createlist' className='createListing'>
+             <img src={HomeIcon} alt="home Icon" />
+             <p>Sell or rent your house</p>
+             <img src={ArrowRight} alt="Arrow Right" />
+         </Link>
        </main>
      </div>
   )

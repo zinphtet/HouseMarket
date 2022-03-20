@@ -12,12 +12,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from './context/AuthContext';
 import { useContext } from 'react';
 import Category from './pages/Category';
+import Spinner from './components/Spinner';
+import CreateList from './pages/CreateList';
 
 function App() {
 	const { currentUser, authState } = useContext(AuthContext);
 	return (
 		<>
-			{authState && (
+			{!authState ? (
+				<Spinner />
+			) : (
 				<>
 					<ToastContainer />
 					<Routes>
@@ -43,6 +47,8 @@ function App() {
 							}
 						/>
 						<Route path="/forgotpassword" element={<ForgotPassword />} />
+						<Route path="*" element={<div>No match Route ...</div>} />
+						<Route path="/createlist" element={<CreateList />} />
 					</Routes>
 					<Navbar />
 				</>

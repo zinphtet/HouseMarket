@@ -2,13 +2,14 @@ import React from 'react'
 import {useLocation ,useParams} from 'react-router-dom'
 import useGetDocs from '../customHooks/useGetDocs'
 import ListingItem from '../components/ListingItem'
+import Spinner from '../components/Spinner'
 function Category() {
     const location = useLocation()
     const {routeName} = useParams()
     let query = ['type' , '==',routeName]
     if(!routeName) query = [location.pathname.slice(1) ,'==',true]
     const {data,loading} = useGetDocs(query)
-    console.log(location.pathname.slice(1))
+ 
      if(routeName!=='rent' && routeName !=='sell' && location.pathname.slice(1)!=='offer')return <div>Nothing here...</div>
   return (
    <div className="category">
@@ -17,7 +18,7 @@ function Category() {
                {!routeName ? 'Special Offer' :`Places for ${routeName}`}
            </p>
        </header>
-       {loading ? <div>Loading ...</div> : data && !data.length > 0 ? <div>No Items found</div>: (<>
+       {loading ? <Spinner/> : data && !data.length > 0 ? <div>No Items found</div>: (<>
         <main>
            <ul className="categoryListings">
                {
