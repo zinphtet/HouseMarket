@@ -9,14 +9,14 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { serverTimestamp } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import useAddDoc from '../customHooks/useAddDoc'
 import Spinner from '../components/Spinner'
 function CreateList() {
   const [geolocationEnabled, setGeolocationEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
-  const {addDocument,load} = useAddDoc()
+  const {addDocument} = useAddDoc()
   const [formData, setFormData] = useState({
     type: 'rent',
     name: '',
@@ -107,7 +107,7 @@ console.log(auth.currentUser)
 
     //  Store image in firebase
      const storeImage = async (image) => {
-      //  setLoading(true)
+      setLoading(true)
       return new Promise((resolve, reject) => {
         const storage = getStorage()
         const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
@@ -137,7 +137,7 @@ console.log(auth.currentUser)
             reject(error)
           },
           () => {
-            setLoading(false)
+            // setLoading(false)
             // Handle successful uploads on complete
             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -162,7 +162,7 @@ console.log(auth.currentUser)
     if(geolocationEnabled){
       const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyBdpnTTugeYGGiFoDdhpXNPjoiVEYLiVEo `)
       const data = await response.json()
-      console.log(data)
+      // console.log(data)
     }
 
     const  formDataCopy = {
@@ -176,6 +176,7 @@ console.log(auth.currentUser)
    await addDocument('listings',formDataCopy)
    setLoading(false)
   }
+  if(loading) return <Spinner/>
   return  (
     <div className='profile'>
       <header>
@@ -406,7 +407,7 @@ console.log(auth.currentUser)
             required
           />
           <button type='submit' className='primaryButton createListingButton'>
-          {loading||load ? 'Creating...wait ...':'Create Listing'}
+        Create Listing
           </button>
         </form>
       </main>

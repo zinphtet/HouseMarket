@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { db } from '../firebase/firebase';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot,orderBy } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 const useGetDocs = (queryInput) => {
 	const { routeName } = useParams();
@@ -11,7 +11,7 @@ const useGetDocs = (queryInput) => {
 	useEffect(() => {
 		const myquery = query(
 			collection(db, 'listings'),
-			where(...queryInput)
+			where(...queryInput),orderBy("timestamp", "desc")
 		);
 		const unsub = onSnapshot(myquery, (querySnapShot) => {
 			const arrData = [];

@@ -595,7 +595,10 @@ button {
 	font-weight: 600;
 	font-size: 1.2rem;
 }
-
+.landlordName span {
+	font-size: 1.7rem;
+	color: #00cc66;
+}
 .messageForm {
 	margin-top: 0.5rem;
 }

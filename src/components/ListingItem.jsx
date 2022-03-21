@@ -42,7 +42,9 @@ function ListingItem({listing}) {
                    </p>
                    <p className="categoryListingPrice">
                      
-                        {offer ? discountedPrice : regularPrice} {type==='rent' ? '$ / Month':' $' } 
+                        {offer ? discountedPrice.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : regularPrice.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',')} {type==='rent' ? '$ / Month':' $' } 
                    </p>
                    <div className="categoryListingInfoDiv">
                          <img src={bedIcon} alt="bed icon" />

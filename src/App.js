@@ -14,6 +14,8 @@ import { useContext } from 'react';
 import Category from './pages/Category';
 import Spinner from './components/Spinner';
 import CreateList from './pages/CreateList';
+import SingleList from './pages/SingleList';
+import Contact from './pages/Contact';
 
 function App() {
 	const { currentUser, authState } = useContext(AuthContext);
@@ -27,7 +29,7 @@ function App() {
 					<Routes>
 						<Route path="/" element={<Explore />} />
 						<Route path="/category/:routeName" element={<Category />} />
-						<Route path="/offer" element={<Category />} />
+						<Route path="/offer" element={<Offer />} />
 						<Route
 							path="/profile"
 							element={
@@ -49,6 +51,12 @@ function App() {
 						<Route path="/forgotpassword" element={<ForgotPassword />} />
 						<Route path="*" element={<div>No match Route ...</div>} />
 						<Route path="/createlist" element={<CreateList />} />
+						<Route path="/:category/:listId" element={<SingleList />} />
+						<Route
+							path="/:category/:sellrent/:listId"
+							element={<SingleList />}
+						/>
+						<Route path="/contact/:userRef" element={<Contact />} />
 					</Routes>
 					<Navbar />
 				</>

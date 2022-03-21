@@ -21,7 +21,7 @@ const useAddDoc = () => {
 	};
 	return {
 		addDocument,
-		load,
+		
 	};
 };
 
