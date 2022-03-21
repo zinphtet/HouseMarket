@@ -6,7 +6,17 @@ import { doc, getDoc } from "firebase/firestore";
 import {Link, useNavigate, useParams}  from 'react-router-dom'
 import { auth, db } from '../firebase/firebase';
 import { toast } from 'react-toastify';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
+//import swiper
+
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
+//  import 'swiper/css/navigation.css';
+// import 'swiper/css/pagination';
+// import 'swiper/css/scrollbar';
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y ])
 
 function SingleList() {
     const [shareLinkCopy , setShareLinkCopy] = useState(false)
@@ -37,6 +47,33 @@ function SingleList() {
   return (
     <main>
         {/* //sidebar will come */}
+        <Swiper
+      // install Swiper modules
+      modules={[Navigation, Pagination,Scrollbar, A11y]}
+      slidesPerView={1}
+    >
+        {
+            listing.imageUrls.map((item,index)=>
+                 (<SwiperSlide key={index} >
+                        <div className="swiperSlideDiv" style={{
+                            background:`url(${listing.imageUrls[index]}) center no-repeat`,
+                            backgroundSize:'cover',
+                            }}
+                            pagination ={{clickable:true}}
+                            >
+                            
+                        </div>
+                  
+                </SwiperSlide>)
+            )
+        }
+      {/* <SwiperSlide>Slide 1</SwiperSlide>
+      <SwiperSlide>Slide 2</SwiperSlide>
+      <SwiperSlide>Slide 3</SwiperSlide>
+      <SwiperSlide>Slide 4</SwiperSlide>
+      ... */}
+    </Swiper>
+
         <div className="shareIconDiv" onClick={()=>{
             navigator.clipboard.writeText(window.location.href)
             setShareLinkCopy(true)
@@ -74,6 +111,27 @@ function SingleList() {
                 Location
             </p>
         {/* //map */}
+        <div className="leafletContainer">
+            <MapContainer
+             center={[51.505, -0.09]} 
+             zoom={13} 
+             style={{
+                width:'100% ',
+                height:'100%'
+                }}
+                scrollWheelZoom ={false}
+                >
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[51.505, -0.09]}>
+                    <Popup>
+                    A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                </Marker>
+            </MapContainer>
+        </div>
         {auth.currentUser.uid !== listing.userRef &&(
             <Link to={`/contact/${listing.userRef}?listingName=${listing.name}`} className='primaryButton'>
              Contact Landlord
