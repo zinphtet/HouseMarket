@@ -20,7 +20,7 @@ function ListingItem({listing}) {
     offer,
     type,
     userRef,
-    discountPrice,
+    discountedPrice,
     regularPrice,
     itemId,
     geolocation,
@@ -42,7 +42,7 @@ function ListingItem({listing}) {
                    </p>
                    <p className="categoryListingPrice">
                      
-                        {offer ? discountPrice : regularPrice} {type==='rent' ? '$ / Month':' $' } 
+                        {offer ? discountedPrice : regularPrice} {type==='rent' ? '$ / Month':' $' } 
                    </p>
                    <div className="categoryListingInfoDiv">
                          <img src={bedIcon} alt="bed icon" />

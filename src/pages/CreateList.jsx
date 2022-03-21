@@ -2,6 +2,7 @@ import React ,{useState,useEffect}from 'react'
 import {auth}  from '../firebase/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { toast } from 'react-toastify'
+
 import {
   getStorage,
   ref,
@@ -9,12 +10,13 @@ import {
   getDownloadURL,
 } from 'firebase/storage'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-
 import { v4 as uuidv4 } from 'uuid'
-
+import useAddDoc from '../customHooks/useAddDoc'
+import Spinner from '../components/Spinner'
 function CreateList() {
   const [geolocationEnabled, setGeolocationEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
+  const {addDocument,load} = useAddDoc()
   const [formData, setFormData] = useState({
     type: 'rent',
     name: '',
@@ -103,55 +105,58 @@ console.log(auth.currentUser)
       return ;
     }
 
-     // Store image in firebase
-    //  const storeImage = async (image) => {
-    //   return new Promise((resolve, reject) => {
-    //     const storage = getStorage()
-    //     const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
+    //  Store image in firebase
+     const storeImage = async (image) => {
+      //  setLoading(true)
+      return new Promise((resolve, reject) => {
+        const storage = getStorage()
+        const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
 
-    //     const storageRef = ref(storage, 'images/' + fileName)
+        const storageRef = ref(storage, 'images/' + fileName)
 
-    //     const uploadTask = uploadBytesResumable(storageRef, image)
+        const uploadTask = uploadBytesResumable(storageRef, image)
 
-    //     uploadTask.on(
-    //       'state_changed',
-    //       (snapshot) => {
-    //         const progress =
-    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-    //         console.log('Upload is ' + progress + '% done')
-    //         switch (snapshot.state) {
-    //           case 'paused':
-    //             console.log('Upload is paused')
-    //             break
-    //           case 'running':
-    //             console.log('Upload is running')
-    //             break
-    //           default:
-    //             break
-    //         }
-    //       },
-    //       (error) => {
-    //         reject(error)
-    //       },
-    //       () => {
-    //         // Handle successful uploads on complete
-    //         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-    //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-    //           resolve(downloadURL)
-    //         })
-    //       }
-    //     )
-    //   })
-    // }
-
-    // const imgUrls = await Promise.all(
-    //   [...images].map((image) => storeImage(image))
-    // ).catch(() => {
-    //   setLoading(false)
-    //   toast.error('Images not uploaded')
-    //   return
-    // })
-    // console.log(imgUrls)
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log('Upload is ' + progress + '% done')
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused')
+                break
+              case 'running':
+                console.log('Upload is running')
+                break
+              default:
+                break
+            }
+          },
+          (error) => {
+            reject(error)
+          },
+          () => {
+            setLoading(false)
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL)
+            })
+          }
+        )
+      })
+    }
+    setLoading(true)
+    const imageUrls = await Promise.all(
+      [...images].map((image) => storeImage(image))
+    ).catch(() => {
+      setLoading(false)
+      toast.error('Images not uploaded')
+      return
+    })
+   
+    console.log(imageUrls)
     console.log(formData)
 
     if(geolocationEnabled){
@@ -159,6 +164,17 @@ console.log(auth.currentUser)
       const data = await response.json()
       console.log(data)
     }
+
+    const  formDataCopy = {
+      ...formData,
+      imageUrls,
+     timestamp : serverTimestamp(),
+     location:address
+    }
+    delete formDataCopy.images
+  
+   await addDocument('listings',formDataCopy)
+   setLoading(false)
   }
   return  (
     <div className='profile'>
@@ -390,7 +406,7 @@ console.log(auth.currentUser)
             required
           />
           <button type='submit' className='primaryButton createListingButton'>
-            Create Listing
+          {loading||load ? 'Creating...wait ...':'Create Listing'}
           </button>
         </form>
       </main>
