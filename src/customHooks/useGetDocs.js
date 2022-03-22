@@ -6,6 +6,7 @@ import {
 	where,
 	onSnapshot,
 	orderBy,
+	limit,
 } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 const useGetDocs = (queryInput) => {
@@ -15,12 +16,13 @@ const useGetDocs = (queryInput) => {
 	const [loading, setLoading] = useState(true);
 	const [unmount, setUnmount] = useState(false);
 	useEffect(() => {
-		let myquery = collection(db, 'listings');
+		let myquery = query(collection(db, 'listings'), limit(10));
 		if (queryInput) {
 			myquery = query(
 				collection(db, 'listings'),
 				where(...queryInput),
-				orderBy('timestamp', 'desc')
+				orderBy('timestamp', 'desc'),
+				limit(1)
 			);
 		}
 

@@ -4,11 +4,11 @@ import ImgSrc from '../house-images/exterior_1.jpeg'
 import bedIcon from '../assets/svg/bedIcon.svg'
 import bathtubIcon from '../assets/svg/bathtubIcon.svg'
 import { Link , useLocation, useParams } from 'react-router-dom'
+import {ReactComponent as DeleteIcon}  from '../assets/svg/deleteIcon.svg'
+function ListingItem({listing,onDelete}) {
 
-function ListingItem({listing}) {
-    console.log(listing)
       const routePath = useLocation()
-    //   console.log(location)
+    
     const {
     name,
     imageUrls,
@@ -26,8 +26,6 @@ function ListingItem({listing}) {
     geolocation,
     timestamp
     } = listing;
-    // console.log(id)
-    // to={`${location.pathname}/${itemId}`}
   return (
       <>
       <li className="categoryListing">
@@ -54,6 +52,16 @@ function ListingItem({listing}) {
                    </div>
                </div>
        </Link>
+   
+   {
+       onDelete && <DeleteIcon
+        className="removeIcon"
+        fill='red'
+        title='delete item ?'
+        onClick={()=> onDelete(listing.itemId)}
+       />
+   }
+
    </li> 
       </>
         
@@ -62,25 +70,3 @@ function ListingItem({listing}) {
 
 export default ListingItem
 
-{/* <div className="categoryListing">
-       <Link className='caterogyListinLink'>
-               <img src={imageUrls[0]} alt="cateegory img" className='categoryListingImg' />
-               <div className="categoryListingDetails">
-                   <p className="categoryListingLocation">
-
-                   </p>
-                   <p className="categoryListingName">
-                        {name}
-                   </p>
-                   <p className="categoryListingPrice">
-
-                   </p>
-                   <div className="categoryListingInfoDiv">
-                         <img src={bedIcon} alt="bed icon" />
-                         <p className="categoryListingInfoText"></p>
-                         <img src={bathtubIcon} alt="bathtub icon" />
-                         <p className="categoryListingInfoText"></p>
-                   </div>
-               </div>
-       </Link>
-   </div> */}

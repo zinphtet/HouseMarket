@@ -1,14 +1,15 @@
 import React from 'react'
-import {useContext,useState,useEffect,useMemo} from 'react'
+import {useContext,useState,useEffect} from 'react'
 import {AuthContext}  from '../context/AuthContext'
 import useLogout from '../customHooks/useLogout'
 import useUpdateUser from '../customHooks/useUpdateUser'
 import { db } from '../firebase/firebase'
 import { doc, getDoc } from "firebase/firestore";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import HomeIcon from '../assets/svg/homeIcon.svg'
 import ArrowRight from '../assets/svg/keyboardArrowRightIcon.svg'
-
+import ListingItem from '../components/ListingItem'
+import useDeleteDoc from '../customHooks/useDeleteDoc'
 function Profile() {
   const {currentUser ,dispatch} = useContext(AuthContext)
   const {displayName , email} = currentUser
@@ -17,7 +18,7 @@ function Profile() {
   const [unmount , setUnmount] = useState(false)
   const {logout} = useLogout()
   const {updateUser} = useUpdateUser()
-  
+  const {deleteDocument,lists} = useDeleteDoc('listings',currentUser.uid)
   useEffect(async () => {
     const docRef = doc(db, "users",currentUser.uid);
     const docSnap = await getDoc(docRef);
@@ -32,6 +33,14 @@ function Profile() {
   const handleChange = (e)=>{
     e.preventDefault();
      setName(e.target.value)
+  }
+  const deleteDoc = (id)=>{
+    console.log(id)
+    if(window.confirm("Are you sure you want delet ?")){
+      deleteDocument(id)
+     
+    }
+      
   }
   return (
      <div className="profile">
@@ -67,6 +76,16 @@ function Profile() {
              <p>Sell or rent your house</p>
              <img src={ArrowRight} alt="Arrow Right" />
          </Link>
+         { lists && <>
+           <p className="listingText">
+               Your Lists
+           </p>
+           {lists.length ===0 && <p>No List </p>}
+           <ul className='listingList'>
+           {lists.map((item,index)=><ListingItem listing={item} key={item.itemId} onDelete={deleteDoc}/>)}
+           </ul>
+         </>
+         }
        </main>
      </div>
   )

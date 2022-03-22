@@ -12,8 +12,6 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y,Autoplay ])
 function Slide() {
     const navigate = useNavigate()
     const {data,loading} = useGetDocs()
-    console.log(data)
-
   if(loading) return <Spinner/>
   return (
       <>
