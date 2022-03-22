@@ -10,24 +10,20 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 //import swiper
 
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-//  import 'swiper/css/navigation.css';
-// import 'swiper/css/pagination';
-// import 'swiper/css/scrollbar';
-SwiperCore.use([Navigation, Pagination, Scrollbar, A11y ])
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y,Autoplay ])
+
+
 
 function SingleList() {
     const [shareLinkCopy , setShareLinkCopy] = useState(false)
     const [listing , setListing] = useState(null)
     const [loading , setLoading] = useState(true)
-    
-    // if(loading) return <Spinner/>
+
     const navigate = useNavigate();
     const param = useParams()
-    // console.log(param)
-
     useEffect(() => {
       const fetchDoc = async ()=>{
         const docRef = doc(db, "listings", param.listId);
@@ -46,11 +42,14 @@ function SingleList() {
   if(loading) return <Spinner/>
   return (
     <main>
-        {/* //sidebar will come */}
-        <Swiper
-      // install Swiper modules
-      modules={[Navigation, Pagination,Scrollbar, A11y]}
+       
+      <Swiper
+      modules={[ Pagination,Autoplay]}
       slidesPerView={1}
+      pagination={{ clickable: true ,type:'bullets' }}
+      autoplay={{delay:3000}}
+   
+      loop={true}
     >
         {
             listing.imageUrls.map((item,index)=>
@@ -59,22 +58,19 @@ function SingleList() {
                             background:`url(${listing.imageUrls[index]}) center no-repeat`,
                             backgroundSize:'cover',
                             }}
-                            pagination ={{clickable:true}}
+                          
                             >
-                            
+                         
+
                         </div>
                   
                 </SwiperSlide>)
             )
         }
-      {/* <SwiperSlide>Slide 1</SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-      <SwiperSlide>Slide 3</SwiperSlide>
-      <SwiperSlide>Slide 4</SwiperSlide>
-      ... */}
+     
     </Swiper>
 
-        <div className="shareIconDiv" onClick={()=>{
+    <div className="shareIconDiv" onClick={()=>{
             navigator.clipboard.writeText(window.location.href)
             setShareLinkCopy(true)
             setTimeout(()=>{

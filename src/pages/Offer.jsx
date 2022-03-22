@@ -12,7 +12,8 @@ function Offer() {
    <div className="category">
        <header>
            <p className="pageHeader">
-               Places for {routeName==='rent' ? 'Rent' :'Sale' }
+               {/* Places for {routeName==='rent' ? 'Rent' :'Sale' } */}
+               Special Offer
            </p>
        </header>
        {loading ? <div>Loading ...</div> : data && !data.length > 0 ? <div>No Items found</div>: (<>
