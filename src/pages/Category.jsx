@@ -1,16 +1,57 @@
-import React from 'react'
-import {useLocation ,useParams} from 'react-router-dom'
-import useGetDocs from '../customHooks/useGetDocs'
+import React,{useState,useEffect} from 'react'
+import {useParams} from 'react-router-dom'
 import ListingItem from '../components/ListingItem'
 import Spinner from '../components/Spinner'
+import { collection, query, where, getDocs,orderBy,limit ,startAfter} from "firebase/firestore";
+import { db } from '../firebase/firebase'
+import { toast } from 'react-toastify'
 function Category() {
-    const location = useLocation()
+   
     const {routeName} = useParams()
-    let query = ['type' , '==',routeName]
-    if(!routeName) query = [location.pathname.slice(1) ,'==',true]
-    const {data,loading} = useGetDocs(query)
+    const [loading,setLoading] = useState(false)
+    const [myData,setMyData] = useState([])
+    const [lastVisible,setLastVisible] = useState(null)
+     console.log(routeName)
  
-     if(routeName!=='rent' && routeName !=='sell' && location.pathname.slice(1)!=='offer')return <div>Nothing here...</div>
+   useEffect(()=>{
+    const fetchListings = async ()=>{
+        try{
+            setLoading(true)
+        const arrData = []
+        const q = query(collection(db, "listings"), where("type", "==",routeName),orderBy("timestamp","desc"),limit(10));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+               return arrData.push({...doc.data(),itemId:doc.id})
+        });
+        setLastVisible(querySnapshot.docs[querySnapshot.docs.length-1])
+        setMyData(arrData)
+        setLoading(false)
+          
+        }catch(error){
+            setLoading(false)
+            toast.error("Error fetching data")
+        }
+        
+    }
+    fetchListings()
+   },[routeName])
+   const loadMore = async ()=>{
+    try{
+     
+    const arrData = []
+    const q = query(collection(db, "listings"), where("type", "==",routeName),orderBy("timestamp","desc"), startAfter(lastVisible),limit(10));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+           return arrData.push({...doc.data(),itemId:doc.id})
+    });
+    setLastVisible(querySnapshot.docs[querySnapshot.docs.length-1])
+    setMyData((prev)=>[...prev,...arrData])
+  
+    }catch(error){
+       
+        toast.error("Error fetching data")
+    }
+}
   return (
    <div className="category">
        <header>
@@ -18,16 +59,23 @@ function Category() {
                {!routeName ? 'Special Offer' :`Places for ${routeName}`}
            </p>
        </header>
-       {loading ? <Spinner/> : data && !data.length > 0 ? <div>No Items found</div>: (<>
+       {loading ? <Spinner/> :myData && !myData.length > 0 ? <div>No Items found</div>: (<>
         <main>
            <ul className="categoryListings">
                {
-                  data.map((item,index)=>{
+                 myData.map((item,index)=>{
                  return  <ListingItem listing={item} key={index} />
                 })
                }
            </ul>
        </main>
+       <br />
+       <br />
+       {lastVisible && (
+           <p className="loadMore" onClick={loadMore}>
+               LoadMore
+           </p>
+       )}
        </>) }
        
    </div>

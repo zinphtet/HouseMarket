@@ -36,7 +36,7 @@ function Profile() {
   }
   const deleteDoc = (id)=>{
     console.log(id)
-    if(window.confirm("Are you sure you want delet ?")){
+    if(window.confirm("Are you sure you want delete ?")){
       deleteDocument(id)
      
     }
