@@ -5,7 +5,8 @@ import bedIcon from '../assets/svg/bedIcon.svg'
 import bathtubIcon from '../assets/svg/bathtubIcon.svg'
 import { Link , useLocation, useParams } from 'react-router-dom'
 import {ReactComponent as DeleteIcon}  from '../assets/svg/deleteIcon.svg'
-function ListingItem({listing,onDelete}) {
+import {ReactComponent as EditIcon}  from '../assets/svg/editIcon.svg'
+function ListingItem({listing,onDelete,onEdit}) {
 
       const routePath = useLocation()
     
@@ -59,6 +60,13 @@ function ListingItem({listing,onDelete}) {
         fill='red'
         title='delete item ?'
         onClick={()=> onDelete(listing.itemId)}
+       />
+   }
+    {
+       onEdit && <EditIcon
+        className="editIcon"
+        title='edit item ?'
+        onClick={()=> onEdit(listing.itemId)}
        />
    }
 

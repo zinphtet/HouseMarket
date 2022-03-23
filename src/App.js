@@ -16,6 +16,7 @@ import Spinner from './components/Spinner';
 import CreateList from './pages/CreateList';
 import SingleList from './pages/SingleList';
 import Contact from './pages/Contact';
+import EditList from './pages/EditList';
 
 function App() {
 	const { currentUser, authState } = useContext(AuthContext);
@@ -57,6 +58,7 @@ function App() {
 							element={<SingleList />}
 						/>
 						<Route path="/contact/:userRef" element={<Contact />} />
+						<Route path="/editlist/:itemId" element={<EditList />} />
 					</Routes>
 					<Navbar />
 				</>

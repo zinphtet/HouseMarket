@@ -11,7 +11,7 @@ function Category() {
     const [loading,setLoading] = useState(false)
     const [myData,setMyData] = useState([])
     const [lastVisible,setLastVisible] = useState(null)
-     console.log(routeName)
+ 
  
    useEffect(()=>{
     const fetchListings = async ()=>{

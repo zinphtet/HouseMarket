@@ -19,6 +19,9 @@ function Profile() {
   const {logout} = useLogout()
   const {updateUser} = useUpdateUser()
   const {deleteDocument,lists} = useDeleteDoc('listings',currentUser.uid)
+  
+   const navigate = useNavigate()
+
   useEffect(async () => {
     const docRef = doc(db, "users",currentUser.uid);
     const docSnap = await getDoc(docRef);
@@ -38,9 +41,10 @@ function Profile() {
     console.log(id)
     if(window.confirm("Are you sure you want delete ?")){
       deleteDocument(id)
-     
     }
-      
+  }
+  const editDoc = (id)=>{
+      navigate(`/editlist/${id}`)
   }
   return (
      <div className="profile">
@@ -82,7 +86,7 @@ function Profile() {
            </p>
            {lists.length ===0 && <p>No List </p>}
            <ul className='listingList'>
-           {lists.map((item,index)=><ListingItem listing={item} key={item.itemId} onDelete={deleteDoc}/>)}
+           {lists.map((item,index)=><ListingItem listing={item} key={item.itemId} onDelete={deleteDoc} onEdit={editDoc}/>)}
            </ul>
          </>
          }
