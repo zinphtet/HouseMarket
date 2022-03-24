@@ -3,7 +3,7 @@ import ShareIcon from '../assets/svg/shareIcon.svg'
 import {useState,useEffect} from 'react'
 import Spinner from '../components/Spinner'
 import { doc, getDoc } from "firebase/firestore";
-import {Link, useNavigate, useParams}  from 'react-router-dom'
+import {Link,  useParams}  from 'react-router-dom'
 import { auth, db } from '../firebase/firebase';
 import { toast } from 'react-toastify';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
@@ -22,7 +22,6 @@ function SingleList() {
     const [listing , setListing] = useState(null)
     const [loading , setLoading] = useState(true)
 
-    const navigate = useNavigate();
     const param = useParams()
     useEffect(() => {
       const fetchDoc = async ()=>{
@@ -30,7 +29,6 @@ function SingleList() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             setListing(docSnap.data())
-         console.log("Document data:", docSnap.data());
         setLoading(false)
         } else {
          toast.error("Error fetching Doc")
@@ -38,7 +36,7 @@ function SingleList() {
       }
       fetchDoc()
     }, [param.listId])
-
+ 
   if(loading) return <Spinner/>
   return (
     <main>
@@ -48,7 +46,6 @@ function SingleList() {
       slidesPerView={1}
       pagination={{ clickable: true ,type:'bullets' }}
       autoplay={{delay:3000}}
-   
       loop={true}
     >
         {
@@ -61,7 +58,6 @@ function SingleList() {
                           
                             >
                          
-
                         </div>
                   
                 </SwiperSlide>)
@@ -85,7 +81,8 @@ function SingleList() {
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ','):listing.regularPrice.toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</p>
             <p className="listingLocation">
-                {listing.location ?? listing.address}
+                { listing.address}
+                {listing.location.lat ==0 && listing.location.lng==0 ?" (Location can't recognize )":''}
             </p>
             <p className="listingType">
                For {listing.type==='rent' ? 'Rent' : 'Sale'}
@@ -106,10 +103,10 @@ function SingleList() {
             <p className="listingLocationTitle">
                 Location
             </p>
-        {/* //map */}
+        
         <div className="leafletContainer">
             <MapContainer
-             center={[51.505, -0.09]} 
+             center={[listing.location.lat, listing.location.lng]} 
              zoom={13} 
              style={{
                 width:'100% ',
@@ -121,9 +118,9 @@ function SingleList() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[51.505, -0.09]}>
+                <Marker position={[listing.location.lat, listing.location.lng]}>
                     <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
+                    {listing.address}
                     </Popup>
                 </Marker>
             </MapContainer>

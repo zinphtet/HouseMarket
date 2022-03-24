@@ -18,8 +18,8 @@ function Profile() {
   const [unmount , setUnmount] = useState(false)
   const {logout} = useLogout()
   const {updateUser} = useUpdateUser()
-  const {deleteDocument,lists} = useDeleteDoc('listings',currentUser.uid)
-  
+  const {deleteDocument,lists,loading} = useDeleteDoc('listings',currentUser.uid)
+ 
    const navigate = useNavigate()
 
   useEffect(async () => {
@@ -80,15 +80,14 @@ function Profile() {
              <p>Sell or rent your house</p>
              <img src={ArrowRight} alt="Arrow Right" />
          </Link>
-         { lists && <>
+         { lists ? <>
            <p className="listingText">
                Your Lists
            </p>
-           {lists.length ===0 && <p>No List </p>}
            <ul className='listingList'>
            {lists.map((item,index)=><ListingItem listing={item} key={item.itemId} onDelete={deleteDoc} onEdit={editDoc}/>)}
            </ul>
-         </>
+         </> : 'loading ...'
          }
        </main>
      </div>

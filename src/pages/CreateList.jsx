@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid'
 import useAddDoc from '../customHooks/useAddDoc'
 import Spinner from '../components/Spinner'
 function CreateList() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(false)
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const {addDocument} = useAddDoc()
   const [formData, setFormData] = useState({
@@ -99,7 +99,6 @@ console.log(auth.currentUser)
       toast.warning("discount price can't be upper")
       return;
     }
-    // console.log(images , typeof images)
     if(images.length > 6){
       toast.error("Images can't be more than 6")
       return ;
@@ -137,9 +136,6 @@ console.log(auth.currentUser)
             reject(error)
           },
           () => {
-            // setLoading(false)
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               resolve(downloadURL)
             })
@@ -156,22 +152,23 @@ console.log(auth.currentUser)
       return
     })
    
-    console.log(imageUrls)
-    console.log(formData)
-
-    if(geolocationEnabled){
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyBdpnTTugeYGGiFoDdhpXNPjoiVEYLiVEo `)
-      const data = await response.json()
-      // console.log(data)
-    }
-
     const  formDataCopy = {
       ...formData,
       imageUrls,
      timestamp : serverTimestamp(),
-     location:address
     }
     delete formDataCopy.images
+
+    if(geolocationEnabled){
+      let modifyAddress = address.split(',')[0]
+      const response = await fetch(`https://geocode.xyz/?locate=${modifyAddress}&geoit=JSON&auth=164488697081243261744x51154`)
+      const data = await response.json()
+       console.log(data)
+      formDataCopy.location = {
+        lat:data.latt,
+        lng: data.longt,
+      }
+    }
   
    await addDocument('listings',formDataCopy)
    setLoading(false)
@@ -307,6 +304,7 @@ console.log(auth.currentUser)
             id='address'
             value={address}
             onChange={onMutate}
+            placeholder="eg. city,country"
             required
           />
 

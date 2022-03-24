@@ -17,7 +17,7 @@ import { useParams,useNavigate } from 'react-router-dom'
 import { doc, getDoc ,updateDoc} from "firebase/firestore";
 import { db } from '../firebase/firebase'
 function EditList() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(false)
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     type: 'rent',
@@ -61,7 +61,6 @@ function EditList() {
     const docSnap = await getDoc(docRef);
     
       if (docSnap.exists()) {
-        console.log({...docSnap.data()})
       setFormData({...docSnap.data()})
       } else {
        
@@ -178,19 +177,23 @@ function EditList() {
    
     
 
-    if(geolocationEnabled){
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyBdpnTTugeYGGiFoDdhpXNPjoiVEYLiVEo `)
-      const data = await response.json()
-    }
-
     const  formDataCopy = {
       ...formData,
       imageUrls,
      timestamp : serverTimestamp(),
-     location:address
     }
     delete formDataCopy.images
 
+    if(geolocationEnabled){
+      let modifyAddress = address.split(',')[0]
+      const response = await fetch(`https://geocode.xyz/?locate=${modifyAddress}&geoit=JSON&auth=164488697081243261744x51154`)
+      const data = await response.json()
+       console.log(data)
+      formDataCopy.location = {
+        lat:data.latt,
+        lng: data.longt,
+      }
+    }
     const docRef = doc(db, "listings", itemId);
 
     await updateDoc(docRef,formDataCopy);

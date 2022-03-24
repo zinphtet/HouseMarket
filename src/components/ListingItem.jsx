@@ -1,9 +1,8 @@
 
 import React from 'react'
-import ImgSrc from '../house-images/exterior_1.jpeg'
 import bedIcon from '../assets/svg/bedIcon.svg'
 import bathtubIcon from '../assets/svg/bathtubIcon.svg'
-import { Link , useLocation, useParams } from 'react-router-dom'
+import { Link , useLocation } from 'react-router-dom'
 import {ReactComponent as DeleteIcon}  from '../assets/svg/deleteIcon.svg'
 import {ReactComponent as EditIcon}  from '../assets/svg/editIcon.svg'
 function ListingItem({listing,onDelete,onEdit}) {
@@ -13,19 +12,14 @@ function ListingItem({listing,onDelete,onEdit}) {
     const {
     name,
     imageUrls,
-    location,
     bedrooms,
     bathrooms,
-    parking,
-    finished,
     offer,
     type,
-    userRef,
     discountedPrice,
     regularPrice,
     itemId,
-    geolocation,
-    timestamp
+    address
     } = listing;
   return (
       <>
@@ -34,7 +28,7 @@ function ListingItem({listing,onDelete,onEdit}) {
                <img src={imageUrls[0]} alt="cateegory img" className='categoryListingImg' />
                <div className="categoryListingDetails">
                    <p className="categoryListingLocation">
-                       {location}
+                       {address}
                    </p>
                    <p className="categoryListingName">
                         {name}

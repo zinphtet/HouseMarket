@@ -12,9 +12,9 @@ const useAuthState = () => {
 			unsubscribe();
 		});
 
-		// return () => {
-		// 	unsubscribe();
-		// };
+		return () => {
+			unsubscribe();
+		};
 	}, [user]);
 	return { user, authState };
 };
