@@ -29,55 +29,43 @@ function App() {
 			) : (
 				<>
 					<ToastContainer />
-					<ErrorBoundary>
-						<Suspense fallback={<Spinner />}>
-							<Routes>
-								<Route path="/" element={<Explore />} />
-								<Route path="/category/:routeName" element={<Category />} />
-								<Route path="/offer" element={<Offer />} />
-								<Route
-									path="/profile"
-									element={
-										currentUser ? (
-											<Profile />
-										) : (
-											<Navigate replace to="/signin" />
-										)
-									}
-								/>
-								<Route
-									path="/signin"
-									element={
-										!currentUser ? (
-											<SignIn />
-										) : (
-											<Navigate replace to="/profile" />
-										)
-									}
-								/>
-								<Route
-									path="/signup"
-									element={
-										!currentUser ? (
-											<SignUp />
-										) : (
-											<Navigate replace to="/profile" />
-										)
-									}
-								/>
-								<Route path="/forgotpassword" element={<ForgotPassword />} />
-								<Route path="*" element={<div>No match Route ...</div>} />
-								<Route path="/createlist" element={<CreateList />} />
-								<Route path="/:category/:listId" element={<SingleList />} />
-								<Route
-									path="/:category/:sellrent/:listId"
-									element={<SingleList />}
-								/>
-								<Route path="/contact/:userRef" element={<Contact />} />
-								<Route path="/editlist/:itemId" element={<EditList />} />
-							</Routes>
-						</Suspense>
-					</ErrorBoundary>
+
+					<Suspense fallback={<Spinner />}>
+						<Routes>
+							<Route path="/" element={<Explore />} />
+							<Route path="/category/:routeName" element={<Category />} />
+							<Route path="/offer" element={<Offer />} />
+							<Route
+								path="/profile"
+								element={
+									currentUser ? <Profile /> : <Navigate replace to="/signin" />
+								}
+							/>
+							<Route
+								path="/signin"
+								element={
+									!currentUser ? <SignIn /> : <Navigate replace to="/profile" />
+								}
+							/>
+							<Route
+								path="/signup"
+								element={
+									!currentUser ? <SignUp /> : <Navigate replace to="/profile" />
+								}
+							/>
+							<Route path="/forgotpassword" element={<ForgotPassword />} />
+							<Route path="*" element={<div>No match Route ...</div>} />
+							<Route path="/createlist" element={<CreateList />} />
+							<Route path="/:category/:listId" element={<SingleList />} />
+							<Route
+								path="/:category/:sellrent/:listId"
+								element={<SingleList />}
+							/>
+							<Route path="/contact/:userRef" element={<Contact />} />
+							<Route path="/editlist/:itemId" element={<EditList />} />
+						</Routes>
+					</Suspense>
+
 					<Navbar />
 				</>
 			)}
