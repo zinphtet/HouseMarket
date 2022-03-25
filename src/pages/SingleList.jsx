@@ -125,7 +125,7 @@ function SingleList() {
                 </Marker>
             </MapContainer>
         </div>
-        {auth.currentUser.uid !== listing.userRef &&(
+        {auth.currentUser?.uid !== listing.userRef &&(
             <Link to={`/contact/${listing.userRef}?listingName=${listing.name}`} className='primaryButton'>
              Contact Landlord
             </Link>
